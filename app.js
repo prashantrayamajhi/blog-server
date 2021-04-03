@@ -12,8 +12,8 @@ app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 
-app.use('/tags', TagRoute)
-app.use('/blogs', BlogRoute)
+app.use('/api/v1/tags', TagRoute)
+app.use('/api/v1/blogs', BlogRoute)
 
 
 module.exports = app
