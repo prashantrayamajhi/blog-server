@@ -1,4 +1,7 @@
 const Blog = require('./../models/Blog.model')
+const cloudinaryConfig = require('./../helper/cloudinary')
+const cloudinary = require('cloudinary')
+const fs = require('fs')
 
 exports.getBlogs = async (req,res) => {
     try{
@@ -24,11 +27,20 @@ exports.getBlogById = async (req,res) => {
 }
 
 exports.postBlog = async (req,res) => {
+    cloudinaryConfig()
     try{
-        const { title, img, tag, content } = req.body
-        const blog = new Blog({ title, img, tag, content })
-        await blog.save()
-        return res.status(201).json({data: blog})
+        const { title, tag, content } = req.body
+        const img = req.file
+
+        cloudinary.v2.uploader.upload(img.path,{
+            public_id: 'blogs/'+img.filename
+        }, async (err,result) => {
+            fs.unlinkSync(img.path)
+            if(err) return res.status(500).send({err})
+            const blog = new Blog({ title, tag, content, img: result.secure_url, publicId: result.public_id })
+            await blog.save()
+            return res.status(201).json({data: blog})
+        })
     }catch(err){
         console.log(err)
         return res.status(500).send({err})
