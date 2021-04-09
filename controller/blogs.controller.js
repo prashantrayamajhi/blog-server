@@ -68,12 +68,16 @@ exports.updateBlog = async (req,res) => {
 }
 
 exports.deleteBlog = async (req,res) => {
+    cloudinaryConfig()
     try{
         const id = req.params.id
         const blog = await Blog.findById(id)
         if(!blog) return res.status(404).send({err: 'Blog not found'})
-        await Blog.findOneAndDelete({_id: id})
-        return res.satus(200).send({msg: "Blog deleted"})
+        cloudinary.v2.uploader.destroy(blog.publicId, async (err, result) => {
+            if(err) return res.status(500).send({err})
+            await Blog.findOneAndDelete({_id: id})
+            return res.status(200).send({msg: "Blog deleted"})
+        })
     }catch(err){
         console.log(err)
         return res.status(500).send({err})
