@@ -52,20 +52,6 @@ exports.updateBlog = async (req, res) => {
 
     const data = await blog.save();
     return res.status(200).json({ data });
-
-    // await Blog.findByIdAndUpdate(
-    //   { _id: id },
-    //   { title, tag, description, content },
-    //   { runValidators: true },
-    //   (err, result) => {
-    //     if (err) {
-    //       console.log(err);
-    //       return res.status(500).send({ err });
-    //     } else {
-    //       return res.status(200).json({ data: result });
-    //     }
-    //   }
-    // );
   } catch (err) {
     console.log(err);
     return res.status(500).send({ err });
