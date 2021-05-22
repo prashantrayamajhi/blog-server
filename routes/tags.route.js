@@ -1,14 +1,31 @@
-const router = require('express').Router()
-const controller = require('./../controller/tags.controller')
+const router = require("express").Router();
+const controller = require("./../controller/tags.controller");
+const passport = require("passport");
 
-router.get('/', controller.getTags)
+router.get("/", controller.getTags);
 
-router.get('/:id', controller.getTagById)
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  controller.getTagById
+);
 
-router.post('/', controller.postTag)
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  controller.postTag
+);
 
-router.patch('/:id', controller.updateTag)
+router.patch(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  controller.updateTag
+);
 
-router.delete('/:id', controller.deleteTag)
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  controller.deleteTag
+);
 
-module.exports = router
+module.exports = router;
