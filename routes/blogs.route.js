@@ -4,6 +4,8 @@ const passport = require("passport");
 
 router.get("/", controller.getBlogs);
 
+router.get("/search/:term", controller.getBlogsBySearch);
+
 router.get("/:id", controller.getBlogById);
 
 router.post("/tags", controller.getBlogsByTags);

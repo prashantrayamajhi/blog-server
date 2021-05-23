@@ -10,6 +10,21 @@ exports.getBlogs = async (req, res) => {
   }
 };
 
+exports.getBlogsBySearch = async (req, res) => {
+  const { term } = req.params;
+  try {
+    if (term) {
+      const data = await Blog.find({ $text: { $search: term } })
+        .sort({ createdAt: -1 })
+        .populate("tag");
+      return res.status(200).json({ data });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ err });
+  }
+};
+
 exports.getBlogById = async (req, res) => {
   const { id } = req.params;
   try {

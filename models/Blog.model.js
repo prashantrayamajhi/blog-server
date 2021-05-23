@@ -41,6 +41,8 @@ const BlogSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+BlogSchema.index({ "$**": "text" });
+
 BlogSchema.pre("validate", function (next) {
   const blogs = this;
   if (blogs.content) {
