@@ -6,6 +6,8 @@ router.get("/", controller.getBlogs);
 
 router.get("/:id", controller.getBlogById);
 
+router.post("/tags", controller.getBlogsByTags);
+
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),

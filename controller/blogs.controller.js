@@ -11,11 +11,24 @@ exports.getBlogs = async (req, res) => {
 };
 
 exports.getBlogById = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
     const blog = await Blog.findById(id).populate("tag");
     if (!blog) return res.status(404).send({ err: "Blog not found" });
     return res.status(200).json({ data: blog });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ err });
+  }
+};
+
+exports.getBlogsByTags = async (req, res) => {
+  const { tags } = req.body;
+  try {
+    const data = await Blog.find({
+      tag: { $in: tags },
+    }).populate("tag");
+    return res.status(200).json({ data });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ err });
