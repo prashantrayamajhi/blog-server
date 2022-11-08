@@ -25,9 +25,12 @@ exports.login = async (req, res) => {
 };
 
 exports.signup = async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
   try {
-    const user = new User({ email, password });
+    const userExists = await User.findOne({ email });
+    if (userExists)
+      return res.status(400).send({ err: "Email already registered" });
+    const user = new User({ name, email, password });
     const data = await user.save();
     return res.status(201).json({ data });
   } catch (err) {
