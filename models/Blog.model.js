@@ -24,6 +24,11 @@ const BlogSchema = new mongoose.Schema(
       ref: "Tag",
       required: false,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     description: {
       type: String,
       required: true,

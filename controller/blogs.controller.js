@@ -2,7 +2,9 @@ const Blog = require("./../models/Blog.model");
 
 exports.getBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().sort({ createdAt: -1 }).populate("tag");
+    const blogs = await Blog.find()
+      .sort({ createdAt: -1 })
+      .populate("user", "-password");
     return res.status(200).json({ data: blogs });
   } catch (err) {
     console.log(err);
@@ -16,7 +18,7 @@ exports.getBlogsBySearch = async (req, res) => {
     if (term) {
       const data = await Blog.find({ $text: { $search: term } })
         .sort({ createdAt: -1 })
-        .populate("tag");
+        .populate("user", "-password");
       return res.status(200).json({ data });
     }
   } catch (err) {
@@ -28,7 +30,7 @@ exports.getBlogsBySearch = async (req, res) => {
 exports.getBlogById = async (req, res) => {
   const { id } = req.params;
   try {
-    const blog = await Blog.findById(id).populate("tag");
+    const blog = await Blog.findById(id).populate("user", "-password");
     if (!blog) return res.status(404).send({ err: "Blog not found" });
     return res.status(200).json({ data: blog });
   } catch (err) {
@@ -60,6 +62,7 @@ exports.postBlog = async (req, res) => {
       tag,
       description,
       content,
+      user: req.user._id,
     });
     await blog.save();
     return res.status(201).json({ data: blog });
@@ -79,6 +82,7 @@ exports.updateBlog = async (req, res) => {
     blog.tag = tag;
     blog.description = description;
     blog.content = content;
+    blog.user = user;
 
     const data = await blog.save();
     return res.status(200).json({ data });
